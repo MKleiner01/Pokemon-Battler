@@ -4,13 +4,10 @@ import java.util.Scanner;
 public class Poedex {
     public static void main(String[] args) {
 
-        Scanner scan = new Scanner(System.in);
-
         ArrayList<Pokemon> pokedex = new ArrayList<>();
 
         Pokemon pikachu = new Pokemon("Pikachu", Type.ELECTRIC, 100);
         Pokemon bulbasaur = new Pokemon("Bulbasaur", Type.GRASS, 100);
-
         Attack thunderbolt = new Attack("Thunderbolt", 80, 95, Type.ELECTRIC);
         Attack flamethrower = new Attack("Flamethrower", 90, 100, Type.FIRE);
 
@@ -22,9 +19,28 @@ public class Poedex {
 
         bulbasaur.attacks.add(flamethrower);
 
-        showAllPokemon(pokedex);
+        Scanner scan = new Scanner(System.in);
 
+        boolean running = true;
 
+        while(running){
+            System.out.println("-- MENU --");
+            System.out.println("1. Show all Pokemon");
+            System.out.println("2. Quit");
+
+            int choice = readInt(scan, "Choose one: ");
+
+            switch(choice){
+
+                case 1 -> showAllPokemon(pokedex);
+
+                case 2 -> {
+                    System.out.println("Closing...");
+                    running = false;
+                }
+                default -> System.out.println("Invalid, try again");
+            }
+        }
 
 
     }
@@ -40,6 +56,21 @@ public class Poedex {
             }
             System.out.println();
         }
+    }
+    public static int readInt(Scanner scan, String prompt) {
+
+        while(true){
+            System.out.print(prompt);
+            String input = scan.nextLine();
+
+            try{
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e){
+                System.out.println("That is not a valid number");
+            }
+
+        }
+
     }
 }
 
