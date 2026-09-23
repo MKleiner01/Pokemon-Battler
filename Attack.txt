@@ -1,0 +1,4 @@
+Thunderbolt,ELECTRIC,80,95,Pikachu
+Flamethrower,FIRE,90,100,Pikachu
+Flamethrower,FIRE,90,100,Bulbasaur
+32,FIRE,21,21,2
