@@ -30,7 +30,8 @@ public class Poedex {
             System.out.println("-- MENU --");
             System.out.println("1. Show all Pokemon");
             System.out.println("2. Add Pokemon");
-            System.out.println("3. Quit");
+            System.out.println("3. Edit Pokemon");
+            System.out.println("4. Quit");
 
             int choice = readInt(scan, "Choose one: ");
 
@@ -38,8 +39,8 @@ public class Poedex {
 
                 case 1 -> showAllPokemon(pokedex);
                 case 2 -> addPokemon(scan, pokedex);
-
-                case 3 -> {
+                case 3 -> editPokemon(scan, pokedex);
+                case 4 -> {
                     System.out.println("Closing...");
                     running = false;
                 }
@@ -80,40 +81,20 @@ public class Poedex {
     public static void addPokemon(Scanner scan, ArrayList<Pokemon> pokedex) {
         String name = readString(scan, "Enter the POKEMON NAME");
 
-        Type pokemonType;
-        while (true) {
-            try {
-                System.out.print("Enter the Pokemon TYPE: ");
-                String type = scan.nextLine();
-                pokemonType = Type.valueOf(type.toUpperCase());
-                break;
-            } catch (IllegalArgumentException e) {
-                System.out.println("That is not a valid Type");
-            }
-        }
-        int hp = readInBetween(scan, "Enter POKEMONS HP", 1, 999);
-        Pokemon newPokemon = new Pokemon(name, pokemonType, hp);
-        String attackName = readString(scan, "Enter the ATTACK name: ");
-        int baseDamage = readInBetween(scan, "Enter ATTACK damage", 1, 200);
-        int accuracy = readInBetween(scan, "Enter ATTACK Accuracy",1, 100);
+        Type pokemonType = readType(scan, "Enter pokemon TYPE");
 
-        Type attackType;
-        while (true) {
-            try {
-                System.out.print("Enter the ATTACK type: ");
-                String type = scan.nextLine();
-                attackType = Type.valueOf(type.toUpperCase());
-                break;
-            } catch (IllegalArgumentException e) {
-                System.out.println("That is not a valid Type");
-            }
-        }
+        int hp = readInBetween(scan, "Enter POKEMONS HP, 1 - 999", 1, 999);
+        Pokemon newPokemon = new Pokemon(name, pokemonType, hp);
+        System.out.println("Your Pokemon needs atleast 1 ATTACK");
+        String attackName = readString(scan, "Enter the Attack name ");
+        int baseDamage = readInBetween(scan, "Enter ATTACK damage, 1 - 200", 1, 200);
+        int accuracy = readInBetween(scan, "Enter ATTACK Accuracy, 1 - 100",0, 100);
+        Type attackType = readType(scan, "which Pokemon Type do you want");
 
 
        Attack newAttack = new Attack(attackName, baseDamage, accuracy, attackType);
         newPokemon.attacks.add(newAttack);
         pokedex.add(newPokemon);
-
 
     }
 
@@ -140,8 +121,58 @@ public class Poedex {
         }
 
     }
+    public static Pokemon selectPokemon(Scanner scan, ArrayList<Pokemon> pokedex) {
+
+        for (int i = 0; i < pokedex.size(); i++) {
+            System.out.println((i+1 ) + ". " + pokedex.get(i).name);
+        }
+        int choice = readInBetween(scan, "Select one pokemon", 1, pokedex.size());
+        return pokedex.get(choice - 1);
+    }
+
+    public static Type readType(Scanner scan, String prompt) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                String type = scan.nextLine();
+
+              return Type.valueOf(type.toUpperCase());
+
+            } catch (IllegalArgumentException e) {
+                System.out.println("That is not a valid Type");
+            }
+        }
+    }
+
+    public static void editPokemon(Scanner scan, ArrayList<Pokemon> pokedex){
+
+        Pokemon pokemonToEdit = selectPokemon(scan, pokedex);
+        System.out.println("What do you want to edit?");
+        System.out.println("1. Name");
+        System.out.println("2. Type");
+        System.out.println("3. HP");
+
+        int choice = readInBetween(scan, "Choose", 1, 3);
+
+        switch(choice){
+
+            case 1 -> { String name =readString(scan, "What name do you want");
+                pokemonToEdit.name = name;
+                  }
+            case 2 -> { Type type = readType(scan, "What TYPE do you want");
+                pokemonToEdit.type = type;
+
+            }
+            case 3 -> { int hp = readInBetween(scan, "What HP do you want, 1 - 999", 1, 999);
+                pokemonToEdit.maxHp = hp;
+                pokemonToEdit.currentHp = hp;
+
+            }
+
+            }
+        }
+    }
 
 
 
-}
 
