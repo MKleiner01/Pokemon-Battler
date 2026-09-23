@@ -1,11 +1,15 @@
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.nio.file.Files;
 
 public class Poedex {
     public static void main(String[] args) {
 
         ArrayList<Pokemon> pokedex = new ArrayList<>();
-
+        Path pokemonPath = Path.of("Pokemon.txt");
+        Path attackPath = Path.of("Attack.txt");
 
         Pokemon pikachu = new Pokemon("Pikachu", Type.ELECTRIC, 100);
         Pokemon bulbasaur = new Pokemon("Bulbasaur", Type.GRASS, 100);
@@ -15,11 +19,11 @@ public class Poedex {
         pokedex.add(pikachu);
         pokedex.add(bulbasaur);
 
-
         pikachu.attacks.add(thunderbolt);
         pikachu.attacks.add(flamethrower);
 
         bulbasaur.attacks.add(flamethrower);
+
 
 
         Scanner scan = new Scanner(System.in);
@@ -32,7 +36,10 @@ public class Poedex {
             System.out.println("2. Add Pokemon");
             System.out.println("3. Edit Pokemon");
             System.out.println("4. Delete Pokemon");
-            System.out.println("5. Quit");
+            System.out.println("5.Save to file");
+            System.out.println("6.Load from File");
+            System.out.println("7.Quit");
+
 
 
             int choice = readInt(scan, "Choose one: ");
@@ -44,6 +51,10 @@ public class Poedex {
                 case 3 -> editPokemon(scan, pokedex);
                 case 4 -> deletePokemon(scan, pokedex);
                 case 5 -> {
+                    saveToFile(pokedex, pokemonPath, attackPath);
+                }
+
+                case 6 -> {
                     System.out.println("Closing...");
                     running = false;
                 }
@@ -92,7 +103,7 @@ public class Poedex {
         String attackName = readString(scan, "Enter the Attack name ");
         int baseDamage = readInBetween(scan, "Enter ATTACK damage, 1 - 200", 1, 200);
         int accuracy = readInBetween(scan, "Enter ATTACK Accuracy, 1 - 100",0, 100);
-        Type attackType = readType(scan, "which Pokemon Type do you want");
+        Type attackType = readType(scan, "Enter ATTACK Type");
 
 
        Attack newAttack = new Attack(attackName, baseDamage, accuracy, attackType);
@@ -105,7 +116,7 @@ public class Poedex {
         while (true) {
             System.out.print(prompt);
             String input = scan.nextLine();
-            if (!input.isBlank()) {
+            if (!input.isBlank() && !input.contains(",")) {
                 return input;
             } else {
                 System.out.println("Not a valid input");
@@ -189,7 +200,37 @@ public class Poedex {
 
 
         }
-    }
+        public static void saveToFile(ArrayList<Pokemon> pokedex, Path pokemonPath, Path attackPath){
+        ArrayList<String> pokemonLines = new ArrayList<>();
+            ArrayList<String> attackLines = new ArrayList<>();
+
+        for(Pokemon pokemon : pokedex){
+            pokemonLines.add(pokemon.name + "," + pokemon.type + "," + pokemon.currentHp + "," + pokemon.maxHp);
+            for (Attack attack : pokemon.attacks) {
+                attackLines.add(attack.name + "," +  attack.type + "," + attack.baseDamage + "," + attack.accuracy +","+ pokemon.name);
+            }
+        }
+            String allPokemon = String.join("\n", pokemonLines);
+            try {
+                Files.writeString(pokemonPath, allPokemon);
+            } catch (IOException e) {
+                System.out.println("Cannot save to file");
+            }
+
+            String allAttacks = String.join("\n", attackLines);
+            try {
+                Files.writeString(attackPath, allAttacks);
+            } catch (IOException e) {
+                System.out.println("Cannot save to file");
+            }
+
+        }
+
+
+}
+
+
+
 
 
 
