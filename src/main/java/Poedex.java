@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.nio.file.Files;
 
@@ -50,11 +51,16 @@ public class Poedex {
                 case 2 -> addPokemon(scan, pokedex);
                 case 3 -> editPokemon(scan, pokedex);
                 case 4 -> deletePokemon(scan, pokedex);
-                case 5 -> {
-                    saveToFile(pokedex, pokemonPath, attackPath);
-                }
-
+                case 5 -> saveToFile(pokedex, pokemonPath, attackPath);
                 case 6 -> {
+                    if (Files.exists(pokemonPath) && Files.exists(attackPath)) {
+                        pokedex.clear();
+                        loadFromFile(pokedex, pokemonPath, attackPath);
+                    } else {
+                        System.out.println("No save files found");
+                    }
+                }
+                case 7 -> {
                     System.out.println("Closing...");
                     running = false;
                 }
@@ -225,6 +231,56 @@ public class Poedex {
             }
 
         }
+    public static void loadFromFile(ArrayList<Pokemon> pokedex, Path pokemonPath, Path attackPath) {
+        try {
+            List<String> pokemonLines = Files.readAllLines(pokemonPath);
+
+            for (String line : pokemonLines) {
+                String[] parts = line.split(",");
+
+                String name = parts[0];
+                Type type = Type.valueOf(parts[1]);
+                int currentHp = Integer.parseInt(parts[2]);
+                int maxHp = Integer.parseInt(parts[3]);
+
+                Pokemon pokemon = new Pokemon(name, type, maxHp);
+                pokemon.currentHp = currentHp;
+
+                pokedex.add(pokemon);
+            }
+
+            List<String> attackLines = Files.readAllLines(attackPath);
+
+            for (String line : attackLines) {
+                String[] parts = line.split(",");
+
+                String attackName = parts[0];
+                Type type = Type.valueOf(parts[1]);
+                int baseDamage = Integer.parseInt(parts[2]);
+                int accuracy = Integer.parseInt(parts[3]);
+                String pokemonName = parts[4];
+
+                Attack attack = new Attack(attackName, baseDamage, accuracy, type);
+
+                for (Pokemon pokemon : pokedex) {
+                    if (pokemon.name.equals(pokemonName)) {
+                        pokemon.attacks.add(attack);
+                        break;
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Cannot read from file");
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number in file");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid type in file");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Invalid data in file");
+        }
+    }
+
 
 
 }
