@@ -31,7 +31,9 @@ public class Poedex {
             System.out.println("1. Show all Pokemon");
             System.out.println("2. Add Pokemon");
             System.out.println("3. Edit Pokemon");
-            System.out.println("4. Quit");
+            System.out.println("4. Delete Pokemon");
+            System.out.println("5. Quit");
+
 
             int choice = readInt(scan, "Choose one: ");
 
@@ -40,7 +42,8 @@ public class Poedex {
                 case 1 -> showAllPokemon(pokedex);
                 case 2 -> addPokemon(scan, pokedex);
                 case 3 -> editPokemon(scan, pokedex);
-                case 4 -> {
+                case 4 -> deletePokemon(scan, pokedex);
+                case 5 -> {
                     System.out.println("Closing...");
                     running = false;
                 }
@@ -146,30 +149,45 @@ public class Poedex {
 
     public static void editPokemon(Scanner scan, ArrayList<Pokemon> pokedex){
 
-        Pokemon pokemonToEdit = selectPokemon(scan, pokedex);
-        System.out.println("What do you want to edit?");
-        System.out.println("1. Name");
-        System.out.println("2. Type");
-        System.out.println("3. HP");
+        if(pokedex.isEmpty()){
+            System.out.println("There is no Pokemon to Edit4");
+        }else {Pokemon pokemonToEdit = selectPokemon(scan, pokedex);
+            System.out.println("What do you want to edit?");
+            System.out.println("1. Name");
+            System.out.println("2. Type");
+            System.out.println("3. HP");
 
-        int choice = readInBetween(scan, "Choose", 1, 3);
+            int choice = readInBetween(scan, "Choose", 1, 3);
 
-        switch(choice){
+            switch(choice){
 
-            case 1 -> { String name =readString(scan, "What name do you want");
-                pokemonToEdit.name = name;
-                  }
-            case 2 -> { Type type = readType(scan, "What TYPE do you want");
-                pokemonToEdit.type = type;
+                case 1 -> { String name =readString(scan, "What name do you want");
+                    pokemonToEdit.name = name;
+                }
+                case 2 -> { Type type = readType(scan, "What TYPE do you want");
+                    pokemonToEdit.type = type;
+                }
+                case 3 -> { int hp = readInBetween(scan, "What HP do you want, 1 - 999", 1, 999);
+                    pokemonToEdit.maxHp = hp;
+                    pokemonToEdit.currentHp = hp;
+
+                }
 
             }
-            case 3 -> { int hp = readInBetween(scan, "What HP do you want, 1 - 999", 1, 999);
-                pokemonToEdit.maxHp = hp;
-                pokemonToEdit.currentHp = hp;
+        }
 
-            }
+        }
+        public static void deletePokemon(Scanner scan, ArrayList<Pokemon> pokedex){
+        if(pokedex.isEmpty()){
+            System.out.println("There is no Pokemon to delete");
+        }else {
+            Pokemon pokemon = selectPokemon(scan, pokedex);
+            pokedex.remove(pokemon);
 
-            }
+            System.out.println("Deleting " + pokemon.name + "...");
+        }
+
+
         }
     }
 
