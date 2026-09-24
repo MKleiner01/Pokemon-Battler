@@ -281,7 +281,37 @@ public class Poedex {
         }
     }
 
+    public static void seedData(ArrayList<Pokemon> pokedex) {
+        pokedex.clear();
 
+        Pokemon p1 = new Pokemon("Pikachu", Type.ELECTRIC, 100);
+        p1.attacks.add(new Attack("Thunderbolt", 90, 100, Type.ELECTRIC));
+        p1.attacks.add(new Attack("Quick Attack", 40, 100, Type.NORMAL));
+
+        Pokemon p2 = new Pokemon("Charmander", Type.FIRE, 95);
+        p2.attacks.add(new Attack("Ember", 40, 100, Type.FIRE));
+
+        Pokemon p3 = new Pokemon("Squirtle", Type.WATER, 105);
+        p3.attacks.add(new Attack("Water Gun", 40, 100, Type.WATER));
+
+        Pokemon p4 = new Pokemon("Bulbasaur", Type.GRASS, 100);
+        p4.attacks.add(new Attack("Vine Whip", 45, 100, Type.GRASS));
+
+        Pokemon p5 = new Pokemon("Eevee", Type.NORMAL, 110);
+        p5.attacks.add(new Attack("Tackle", 40, 100, Type.NORMAL));
+
+        Pokemon p6 = new Pokemon("Snorlax", Type.NORMAL, 200);
+        p6.attacks.add(new Attack("Body Slam", 85, 100, Type.NORMAL));
+
+        pokedex.add(p1);
+        pokedex.add(p2);
+        pokedex.add(p3);
+        pokedex.add(p4);
+        pokedex.add(p5);
+        pokedex.add(p6);
+
+        System.out.println("Pokedex has been reset to seed data.");
+    }
 
 }
 
