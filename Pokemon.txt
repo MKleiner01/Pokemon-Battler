@@ -1,3 +1,4 @@
 Pikachu,ELECTRIC,100,100
 Bulbasaur,GRASS,100,100
 2,FIRE,33,33
+coolguy,WATER,100,100

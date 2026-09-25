@@ -12,22 +12,12 @@ public class Poedex {
         Path pokemonPath = Path.of("Pokemon.txt");
         Path attackPath = Path.of("Attack.txt");
 
-        Pokemon pikachu = new Pokemon("Pikachu", Type.ELECTRIC, 100);
-        Pokemon bulbasaur = new Pokemon("Bulbasaur", Type.GRASS, 100);
-        Attack thunderbolt = new Attack("Thunderbolt", 80, 95, Type.ELECTRIC);
-        Attack flamethrower = new Attack("Flamethrower", 90, 100, Type.FIRE);
-
-        pokedex.add(pikachu);
-        pokedex.add(bulbasaur);
-
-        pikachu.attacks.add(thunderbolt);
-        pikachu.attacks.add(flamethrower);
-
-        bulbasaur.attacks.add(flamethrower);
-
-
-
         Scanner scan = new Scanner(System.in);
+
+        if(Files.exists(pokemonPath) && Files.exists(attackPath)){
+           loadFromFile(pokedex,pokemonPath,attackPath);
+        }else {seedData(pokedex);
+        }
 
         boolean running = true;
 
@@ -39,7 +29,8 @@ public class Poedex {
             System.out.println("4. Delete Pokemon");
             System.out.println("5.Save to file");
             System.out.println("6.Load from File");
-            System.out.println("7.Quit");
+            System.out.println("7.Reset to Seed data");
+            System.out.println("8.Quit");
 
 
 
@@ -60,8 +51,10 @@ public class Poedex {
                         System.out.println("No save files found");
                     }
                 }
-                case 7 -> {
+                case 7 -> seedData(pokedex);
+                case 8 -> {
                     System.out.println("Closing...");
+                    saveToFile(pokedex, pokemonPath, attackPath);
                     running = false;
                 }
                 default -> System.out.println("Invalid, try again");
@@ -107,7 +100,7 @@ public class Poedex {
         Pokemon newPokemon = new Pokemon(name, pokemonType, hp);
         System.out.println("Your Pokemon needs atleast 1 ATTACK");
         String attackName = readString(scan, "Enter the Attack name ");
-        int baseDamage = readInBetween(scan, "Enter ATTACK damage, 1 - 200", 1, 200);
+        int baseDamage = readInBetween(scan, "Enter ATTACK damage, 1 - 500", 1, 500);
         int accuracy = readInBetween(scan, "Enter ATTACK Accuracy, 1 - 100",0, 100);
         Type attackType = readType(scan, "Enter ATTACK Type");
 
@@ -173,8 +166,10 @@ public class Poedex {
             System.out.println("1. Name");
             System.out.println("2. Type");
             System.out.println("3. HP");
+            System.out.println("4. Add attack");
+            System.out.println("5. Remove attack");
 
-            int choice = readInBetween(scan, "Choose", 1, 3);
+            int choice = readInBetween(scan, "Choose", 1, 5);
 
             switch(choice){
 
@@ -188,6 +183,32 @@ public class Poedex {
                     pokemonToEdit.maxHp = hp;
                     pokemonToEdit.currentHp = hp;
 
+                }
+                case 4 -> {
+                    if (pokemonToEdit.attacks.size() < 4) {
+                   String name = readString(scan, "Whats the Attack name");
+                   int damage = readInBetween(scan, "Enter ATTACK damage, 1 - 500", 0, 500);
+                   int accuracy = readInBetween(scan, "Enter ATTACK Accuracy, 1 - 100", 0, 100);
+                   Type type = readType(scan, "Whats the Attack Type");
+                   Attack attack = new Attack(name, damage, accuracy, type);
+                   pokemonToEdit.attacks.add(attack);
+                }else {
+                        System.out.println("Too many attacks");
+                    }
+
+                }
+                case 5 -> {
+                    if (pokemonToEdit.attacks.size() > 1) {
+
+                        for (int i = 0; i < pokemonToEdit.attacks.size(); i++) {
+                            System.out.println((i + 1) + ". " + pokemonToEdit.attacks.get(i).name);
+
+                        }
+                        int attackChoice= readInBetween(scan, "Choose attack to remove", 1, pokemonToEdit.attacks.size() );
+                        pokemonToEdit.attacks.remove(attackChoice - 1);
+                    } else {
+                        System.out.println( "A Pokemon must have at least 1 attack");
+                    }
                 }
 
             }
