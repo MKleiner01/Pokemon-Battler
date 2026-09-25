@@ -115,7 +115,7 @@ public class Poedex {
         while (true) {
             System.out.print(prompt);
             String input = scan.nextLine();
-            if (!input.isBlank() && !input.contains(",")) {
+            if (!input.isBlank() && !input.contains(",") && input.length() <= 20) {
                 return input;
             } else {
                 System.out.println("Not a valid input");
@@ -187,8 +187,8 @@ public class Poedex {
                 case 4 -> {
                     if (pokemonToEdit.attacks.size() < 4) {
                    String name = readString(scan, "Whats the Attack name");
-                   int damage = readInBetween(scan, "Enter ATTACK damage, 1 - 500", 0, 500);
-                   int accuracy = readInBetween(scan, "Enter ATTACK Accuracy, 1 - 100", 0, 100);
+                   int damage = readInBetween(scan, "Enter ATTACK damage, 1 - 500", 1, 500);
+                   int accuracy = readInBetween(scan, "Enter ATTACK Accuracy, 1 - 100", 1, 100);
                    Type type = readType(scan, "Whats the Attack Type");
                    Attack attack = new Attack(name, damage, accuracy, type);
                    pokemonToEdit.attacks.add(attack);
@@ -253,6 +253,7 @@ public class Poedex {
 
         }
     public static void loadFromFile(ArrayList<Pokemon> pokedex, Path pokemonPath, Path attackPath) {
+
         try {
             List<String> pokemonLines = Files.readAllLines(pokemonPath);
 
