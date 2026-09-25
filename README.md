@@ -1,4 +1,4 @@
-Pokedex
+# Pokedex
 
 A menu based Pokedex made in java
 The program allows the user to Create, Read, Update, Delete pokemon
@@ -8,7 +8,7 @@ as well as save / load from file
 2. Run Pokedex
 3. Follow the menu options
 
-Usage example
+# Usage example
 When the program starts the user is shown a menu:
 
 1. Show all Pokemon
