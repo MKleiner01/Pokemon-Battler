@@ -93,6 +93,16 @@ public class Pokemon {
             return false;
         }
     }
-
+    public void heal(int healAmmount) {
+        if (healAmmount < 0){
+            return;
+        }
+        int newHp = currentHp + healAmmount;
+        if(newHp > maxHp){
+            setCurrentHp(maxHp);
+        }else {
+            setCurrentHp(newHp);
+        }
+    }
 
 }
