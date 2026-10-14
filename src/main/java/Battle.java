@@ -1,3 +1,4 @@
+import java.util.Random;
 public class Battle {
     private Pokemon playerPokemon;
     private Pokemon enemyPokemon;
@@ -42,13 +43,54 @@ public class Battle {
         }
     }
 
-    public void playerAttack(int choice) {
+    public boolean playerAttack(int choice) {
         if (choice < 1 || choice > playerPokemon.getAttacks().size()) {
             System.out.println("Invalid attack choice");
-            return;
+            return false;
         }
         Attack selectedAttack = playerPokemon.getAttacks().get(choice - 1);
-        System.out.println(playerPokemon + " used: " + selectedAttack.getName());
+        System.out.println(playerPokemon.getName() + " used: " + selectedAttack.getName());
+        Random random = new Random();
+        int accuracy = selectedAttack.getAccuracy();
+        int roll = random.nextInt(100) + 1;
+
+        if (roll > accuracy) {
+            System.out.println("Attack missed!");
+            return true;
+        }
+
+        int damage = selectedAttack.getBaseDamage();
+        enemyPokemon.takeDamage(damage);
+        System.out.println(enemyPokemon.getName() + " has " + enemyPokemon.getCurrentHp() + " HP left");
+        return true;
     }
+
+    public void enemyAttack() {
+        if (enemyPokemon.getAttacks().isEmpty()) {
+            System.out.println(enemyPokemon.getName() + " has no attacks");
+            return;
+        }
+        Random random = new Random();
+        int randomChoice = random.nextInt(enemyPokemon.getAttacks().size());
+        Attack selectedAttack = enemyPokemon.getAttacks().get(randomChoice);
+
+        System.out.println(enemyPokemon.getName() + " used: " + selectedAttack.getName());
+
+        int accuracy = selectedAttack.getAccuracy();
+        int roll = random.nextInt(100) + 1;
+
+        if (roll > accuracy) {
+            System.out.println("Attack missed!");
+            return;
+        }
+
+        int damage = selectedAttack.getBaseDamage();
+        playerPokemon.takeDamage(damage);
+        System.out.println(playerPokemon.getName() + " has " + playerPokemon.getCurrentHp() + " HP left");
+    }
+
+
+
+
 }
 
