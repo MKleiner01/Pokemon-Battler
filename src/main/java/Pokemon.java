@@ -104,5 +104,10 @@ public class Pokemon {
             setCurrentHp(newHp);
         }
     }
+    public Pokemon createBattleCopy() {
+        Pokemon copy = new Pokemon(name, type, maxHp);
+        copy.getAttacks().addAll(attacks);
+        return copy;
+    }
 
 }

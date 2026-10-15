@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.nio.file.Files;
+import java.util.Random;
 
 public class Poedex {
     public static void main(String[] args) {
@@ -31,7 +32,8 @@ public class Poedex {
             System.out.println("5.Save to file");
             System.out.println("6.Load from File");
             System.out.println("7.Reset to Seed data");
-            System.out.println("8.Quit");
+            System.out.println("8. Start Battle");
+            System.out.println("9.Quit");
 
 
             int choice = readInt(scan, "Choose one: ");
@@ -53,6 +55,22 @@ public class Poedex {
                 }
                 case 7 -> seedData(pokedex);
                 case 8 -> {
+                    if (pokedex.size() < 2) {
+                    System.out.println("Need 2 pokemon to start battle");
+                } else {
+                    Pokemon playerPokemon = selectPokemon(scan, pokedex);
+                    Random random = new Random();
+                    int randomChoice = random.nextInt(pokedex.size());
+                    Pokemon enemyPokemon = pokedex.get(randomChoice);
+                        while (enemyPokemon == playerPokemon) {
+                            randomChoice = random.nextInt(pokedex.size());
+                            enemyPokemon = pokedex.get(randomChoice);
+                        }
+                        Battle battle = new Battle(playerPokemon.createBattleCopy(), enemyPokemon.createBattleCopy());
+                        battle.startBattle();
+                }
+                }
+                case 9 -> {
                     System.out.println("Closing...");
                     saveToFile(pokedex, pokemonPath, attackPath);
                     running = false;

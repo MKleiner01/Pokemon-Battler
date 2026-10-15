@@ -123,9 +123,15 @@ public class Battle {
         }
 
         Scanner scanner = new Scanner(System.in);
-
+        showMatchup();
         while (!isBattleOver()) {
+            System.out.println();
+            System.out.println("----- YOUR TURN ------");
+            System.out.println(playerPokemon.getName() + ": " + playerPokemon.getCurrentHp() + "/" + playerPokemon.getMaxHp() + " HP");
+            System.out.println(enemyPokemon.getName() + ": " + enemyPokemon.getCurrentHp() + "/" + enemyPokemon.getMaxHp() + " HP");
+            System.out.println("----------------------");
             showPlayerAttacks();
+            System.out.print("Choose attack: ");
             if (!scanner.hasNextInt()) {
                 System.out.println("Enter a number!");
                 scanner.next();
