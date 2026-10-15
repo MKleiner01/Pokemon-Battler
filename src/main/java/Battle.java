@@ -1,4 +1,6 @@
 import java.util.Random;
+import java.util.Scanner;
+
 public class Battle {
     private Pokemon playerPokemon;
     private Pokemon enemyPokemon;
@@ -89,6 +91,51 @@ public class Battle {
         System.out.println(playerPokemon.getName() + " has " + playerPokemon.getCurrentHp() + " HP left");
     }
 
+    public void playTurn(int choice) {
+        if (isBattleOver()) {
+            System.out.println("The battle is already over!");
+            return;
+        }
+        if (!playerAttack(choice)) {
+            return;
+        }
+        if(enemyPokemon.isFainted()){
+            System.out.println(enemyPokemon.getName() + " has fainted");
+            showWinner();
+            return;
+        }
+        enemyAttack();
+        if(playerPokemon.isFainted()){
+            System.out.println(playerPokemon.getName() + " has fainted");
+            showWinner();
+            return;
+        }
+    }
+    public void startBattle() {
+        if(playerPokemon.getAttacks().isEmpty()) {
+            System.out.println(playerPokemon.getName() + " has no attacks ");
+            return;
+        }
+
+        if(enemyPokemon.getAttacks().isEmpty()) {
+            System.out.println(enemyPokemon.getName() + " has no attacks ");
+            return;
+        }
+
+        Scanner scanner = new Scanner(System.in);
+
+        while (!isBattleOver()) {
+            showPlayerAttacks();
+            if (!scanner.hasNextInt()) {
+                System.out.println("Enter a number!");
+                scanner.next();
+                continue;
+            }
+
+            int choice = scanner.nextInt();
+            playTurn(choice);
+        }
+    }
 
 
 
