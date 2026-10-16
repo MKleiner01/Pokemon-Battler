@@ -5,7 +5,6 @@ public class Battle {
     private Pokemon playerPokemon;
     private Pokemon enemyPokemon;
 
-
     public Battle(Pokemon playerPokemon, Pokemon enemyPokemon) {
         this.playerPokemon = playerPokemon;
         this.enemyPokemon = enemyPokemon;
@@ -96,19 +95,35 @@ public class Battle {
             System.out.println("The battle is already over!");
             return;
         }
-        if (!playerAttack(choice)) {
+        if (choice < 1 || choice > playerPokemon.getAttacks().size()) {
+            System.out.println("Invalid attack choice");
             return;
         }
-        if(enemyPokemon.isFainted()){
-            System.out.println(enemyPokemon.getName() + " has fainted");
-            showWinner();
-            return;
+        if (playerPokemon.getSpeed() >= enemyPokemon.getSpeed()) {
+            playerAttack(choice);
+            if (enemyPokemon.isFainted()) {
+                System.out.println(enemyPokemon.getName() + " has fainted");
+                showWinner();
+                return;
+            }
+            enemyAttack();
+        } else {
+            enemyAttack();
+            if (playerPokemon.isFainted()) {
+                System.out.println(playerPokemon.getName() + " has fainted");
+                showWinner();
+                return;
+            }
+            playerAttack(choice);
         }
-        enemyAttack();
-        if(playerPokemon.isFainted()){
-            System.out.println(playerPokemon.getName() + " has fainted");
+        if (isBattleOver()) {
+            if (playerPokemon.isFainted()) {
+                System.out.println(playerPokemon.getName() + " has fainted");
+            } else {
+                System.out.println(enemyPokemon.getName() + " has fainted");
+            }
+
             showWinner();
-            return;
         }
     }
     public void startBattle() {

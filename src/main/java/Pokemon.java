@@ -7,6 +7,7 @@ public class Pokemon {
     private int maxHp;
     private   int currentHp;
     private ArrayList<Attack> attacks = new ArrayList<>();
+    private int speed;
 
     public String getName() {
         return name;
@@ -63,18 +64,30 @@ public class Pokemon {
     public void setAttacks(ArrayList<Attack> attacks) {
         this.attacks = attacks;
     }
+    public int getSpeed() {
+        return speed;
+    }
+    public void setSpeed(int speed) {
+        if (speed < 1 || speed > 255) {
+            throw new IllegalArgumentException("Speed must be between 1 and 255");
+        }
+        this.speed = speed;
+    }
 
-    public Pokemon(String name, Type type, int maxHp) {
-        this.name = name;
-        this.type = type;
-        this.maxHp = maxHp;
+    public Pokemon(String name, Type type, int maxHp, int speed) {
+        setName(name);
+        setType(type);
+        setMaxHp(maxHp);
         this.currentHp = maxHp;
+        setSpeed(speed);
     }
     @Override
     public String toString() {
         return "Name: " + name +
                 "\nType: " + type +
-                "\nHP: " + currentHp + "/" + maxHp;
+                "\nHP: " + currentHp + "/" + maxHp +
+                "\nSpeed: " + speed;
+
     }
     public void takeDamage(int damage) {
         int newHp = currentHp - damage;
@@ -105,7 +118,7 @@ public class Pokemon {
         }
     }
     public Pokemon createBattleCopy() {
-        Pokemon copy = new Pokemon(name, type, maxHp);
+        Pokemon copy = new Pokemon(name, type, maxHp, speed);
         copy.getAttacks().addAll(attacks);
         return copy;
     }

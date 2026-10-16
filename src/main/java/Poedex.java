@@ -83,7 +83,7 @@ public class Poedex {
                 case 9 -> {
                     battleHistory.showHistory();
                 }
-                case 19 -> {
+                case 10 -> {
                     System.out.println("Closing...");
                     saveToFile(pokedex, pokemonPath, attackPath);
                     running = false;
@@ -128,7 +128,8 @@ public class Poedex {
         Type pokemonType = readType(scan, "Enter pokemon TYPE");
 
         int hp = readInBetween(scan, "Enter POKEMONS HP, 1 - 999", 1, 999);
-        Pokemon newPokemon = new Pokemon(name, pokemonType, hp);
+        int speed = readInBetween(scan, "Enter POKEMONS SPEED, 1 - 255", 1, 255);
+        Pokemon newPokemon = new Pokemon(name, pokemonType, hp, speed);
         System.out.println("Your Pokemon needs atleast 1 ATTACK");
         String attackName = readString(scan, "Enter the Attack name ");
         int baseDamage = readInBetween(scan, "Enter ATTACK damage, 1 - 500", 1, 500);
@@ -202,8 +203,9 @@ public class Poedex {
             System.out.println("3. HP");
             System.out.println("4. Add attack");
             System.out.println("5. Remove attack");
+            System.out.println("6. Speed");
 
-            int choice = readInBetween(scan, "Choose", 1, 5);
+            int choice = readInBetween(scan, "Choose", 1, 6);
 
             switch (choice) {
 
@@ -247,6 +249,10 @@ public class Poedex {
                         System.out.println("A Pokemon must have at least 1 attack");
                     }
                 }
+                case 6 -> {
+                    int speed = readInBetween(scan, "Enter new SPEED, 1 - 255", 1, 255);
+                    pokemonToEdit.setSpeed(speed);
+                }
 
             }
         }
@@ -271,7 +277,7 @@ public class Poedex {
         ArrayList<String> attackLines = new ArrayList<>();
 
         for (Pokemon pokemon : pokedex) {
-            pokemonLines.add(pokemon.getName() + "," + pokemon.getType() + "," + pokemon.getCurrentHp() + "," + pokemon.getMaxHp());
+            pokemonLines.add(pokemon.getName() + "," + pokemon.getType() + "," + pokemon.getCurrentHp() + "," + pokemon.getMaxHp() + "," + pokemon.getSpeed());
             for (Attack attack : pokemon.getAttacks()) {
                 attackLines.add(attack.getName() + "," + attack.getType() + "," + attack.getBaseDamage() + "," + attack.getAccuracy() + "," + pokemon.getName());
             }
@@ -304,8 +310,9 @@ public class Poedex {
                 Type type = Type.valueOf(parts[1]);
                 int currentHp = Integer.parseInt(parts[2]);
                 int maxHp = Integer.parseInt(parts[3]);
+                int speed = Integer.parseInt(parts[4]);
 
-                Pokemon pokemon = new Pokemon(name, type, maxHp);
+                Pokemon pokemon = new Pokemon(name, type, maxHp, speed);
                 pokemon.setCurrentHp(currentHp);
 
                 pokedex.add(pokemon);
@@ -346,23 +353,23 @@ public class Poedex {
     public static void seedData(ArrayList<Pokemon> pokedex) {
         pokedex.clear();
 
-        Pokemon p1 = new Pokemon("Pikachu", Type.ELECTRIC, 100);
+        Pokemon p1 = new Pokemon("Pikachu", Type.ELECTRIC, 100, 110);
         p1.getAttacks().add(new Attack("Thunderbolt", 90, 100, Type.ELECTRIC));
         p1.getAttacks().add(new Attack("Quick Attack", 40, 100, Type.NORMAL));
 
-        Pokemon p2 = new Pokemon("Charmander", Type.FIRE, 95);
+        Pokemon p2 = new Pokemon("Charmander", Type.FIRE, 95, 90);
         p2.getAttacks().add(new Attack("Ember", 40, 100, Type.FIRE));
 
-        Pokemon p3 = new Pokemon("Squirtle", Type.WATER, 105);
+        Pokemon p3 = new Pokemon("Squirtle", Type.WATER, 105, 20);
         p3.getAttacks().add(new Attack("Water Gun", 40, 100, Type.WATER));
 
-        Pokemon p4 = new Pokemon("Bulbasaur", Type.GRASS, 100);
+        Pokemon p4 = new Pokemon("Bulbasaur", Type.GRASS, 100, 55);
         p4.getAttacks().add(new Attack("Vine Whip", 45, 100, Type.GRASS));
 
-        Pokemon p5 = new Pokemon("Eevee", Type.NORMAL, 110);
+        Pokemon p5 = new Pokemon("Eevee", Type.NORMAL, 110, 55);
         p5.getAttacks().add(new Attack("Tackle", 40, 100, Type.NORMAL));
 
-        Pokemon p6 = new Pokemon("Snorlax", Type.NORMAL, 200);
+        Pokemon p6 = new Pokemon("Snorlax", Type.NORMAL, 20, 70);
         p6.getAttacks().add(new Attack("Body Slam", 85, 100, Type.NORMAL));
 
         pokedex.add(p1);
