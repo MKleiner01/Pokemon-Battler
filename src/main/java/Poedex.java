@@ -1,24 +1,19 @@
-import java.io.IOException;
-import java.nio.file.Path;
+
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import java.nio.file.Files;
 import java.util.Random;
 
 public class Poedex {
     public static void main(String[] args) {
 
         ArrayList<Pokemon> pokedex = new ArrayList<>();
-        Path pokemonPath = Path.of("Pokemon.txt");
-        Path attackPath = Path.of("Attack.txt");
         BattleHistory battleHistory = new BattleHistory();
         Scanner scan = new Scanner(System.in);
 
         battleHistory.load();
 
-        if (Files.exists(pokemonPath) && Files.exists(attackPath)) {
-            loadFromFile(pokedex, pokemonPath, attackPath);
+        if (FileManager.filesExist()) {
+            FileManager.loadFromFile(pokedex);
         } else {
             seedData(pokedex);
         }
@@ -47,11 +42,11 @@ public class Poedex {
                 case 2 -> addPokemon(scan, pokedex);
                 case 3 -> editPokemon(scan, pokedex);
                 case 4 -> deletePokemon(scan, pokedex);
-                case 5 -> saveToFile(pokedex, pokemonPath, attackPath);
+                case 5 -> FileManager.saveToFile(pokedex);
                 case 6 -> {
-                    if (Files.exists(pokemonPath) && Files.exists(attackPath)) {
+                    if (FileManager.filesExist()) {
                         pokedex.clear();
-                        loadFromFile(pokedex, pokemonPath, attackPath);
+                        FileManager.loadFromFile(pokedex);
                     } else {
                         System.out.println("No save files found");
                     }
@@ -87,14 +82,12 @@ public class Poedex {
                 }
                 case 10 -> {
                     System.out.println("Closing...");
-                    saveToFile(pokedex, pokemonPath, attackPath);
+                    FileManager.saveToFile(pokedex);
                     running = false;
                 }
                 default -> System.out.println("Invalid, try again");
             }
         }
-
-
     }
 
     public static void showAllPokemon(ArrayList<Pokemon> pokedex) {
@@ -104,12 +97,8 @@ public class Poedex {
             for (Attack attack : pokemon.getAttacks()) {
                 System.out.println(attack);
             }
-
         }
-
-
     }
-
 
     public static void addPokemon(Scanner scan, ArrayList<Pokemon> pokedex) {
         String name = InputHelper.readString(scan, "Enter the POKEMON NAME");
@@ -125,15 +114,10 @@ public class Poedex {
         int accuracy = InputHelper.readInBetween(scan, "Enter ATTACK Accuracy, 1 - 100", 1, 100);
         Type attackType = InputHelper.readType(scan, "Enter ATTACK Type");
 
-
         Attack newAttack = new Attack(attackName, baseDamage, accuracy, attackType);
         newPokemon.getAttacks().add(newAttack);
         pokedex.add(newPokemon);
-
     }
-
-
-
 
 
     public static Pokemon selectPokemon(Scanner scan, ArrayList<Pokemon> pokedex) {
@@ -227,83 +211,6 @@ public class Poedex {
 
     }
 
-    public static void saveToFile(ArrayList<Pokemon> pokedex, Path pokemonPath, Path attackPath) {
-        ArrayList<String> pokemonLines = new ArrayList<>();
-        ArrayList<String> attackLines = new ArrayList<>();
-
-        for (Pokemon pokemon : pokedex) {
-            pokemonLines.add(pokemon.getName() + "," + pokemon.getType() + "," + pokemon.getCurrentHp() + "," + pokemon.getMaxHp() + "," + pokemon.getSpeed());
-            for (Attack attack : pokemon.getAttacks()) {
-                attackLines.add(attack.getName() + "," + attack.getType() + "," + attack.getBaseDamage() + "," + attack.getAccuracy() + "," + pokemon.getName());
-            }
-        }
-        String allPokemon = String.join("\n", pokemonLines);
-        try {
-            Files.writeString(pokemonPath, allPokemon);
-        } catch (IOException e) {
-            System.out.println("Cannot save to file");
-        }
-
-        String allAttacks = String.join("\n", attackLines);
-        try {
-            Files.writeString(attackPath, allAttacks);
-        } catch (IOException e) {
-            System.out.println("Cannot save to file");
-        }
-
-    }
-
-    public static void loadFromFile(ArrayList<Pokemon> pokedex, Path pokemonPath, Path attackPath) {
-
-        try {
-            List<String> pokemonLines = Files.readAllLines(pokemonPath);
-
-            for (String line : pokemonLines) {
-                String[] parts = line.split(",");
-
-                String name = parts[0];
-                Type type = Type.valueOf(parts[1]);
-                int currentHp = Integer.parseInt(parts[2]);
-                int maxHp = Integer.parseInt(parts[3]);
-                int speed = Integer.parseInt(parts[4]);
-
-                Pokemon pokemon = new Pokemon(name, type, maxHp, speed);
-                pokemon.setCurrentHp(currentHp);
-
-                pokedex.add(pokemon);
-            }
-
-            List<String> attackLines = Files.readAllLines(attackPath);
-
-            for (String line : attackLines) {
-                String[] parts = line.split(",");
-
-                String attackName = parts[0];
-                Type type = Type.valueOf(parts[1]);
-                int baseDamage = Integer.parseInt(parts[2]);
-                int accuracy = Integer.parseInt(parts[3]);
-                String pokemonName = parts[4];
-
-                Attack attack = new Attack(attackName, baseDamage, accuracy, type);
-
-                for (Pokemon pokemon : pokedex) {
-                    if (pokemon.getName().equals(pokemonName)) {
-                        pokemon.getAttacks().add(attack);
-                        break;
-                    }
-                }
-            }
-
-        } catch (IOException e) {
-            System.out.println("Cannot read from file");
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid number in file");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid type in file");
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Invalid data in file");
-        }
-    }
 
     public static void seedData(ArrayList<Pokemon> pokedex) {
         pokedex.clear();
