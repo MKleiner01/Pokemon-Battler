@@ -15,6 +15,7 @@ then use it in a fight against the computer.
 The computer is assigned a random pokemon out of the pokedex selection
 The order of who attacks first is the pokemon with the highest speed stat
 
+You can later view Battle History
 # Usage example
 When the program starts the user is shown a menu:
 
