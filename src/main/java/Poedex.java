@@ -12,8 +12,10 @@ public class Poedex {
         ArrayList<Pokemon> pokedex = new ArrayList<>();
         Path pokemonPath = Path.of("Pokemon.txt");
         Path attackPath = Path.of("Attack.txt");
-
+        BattleHistory battleHistory = new BattleHistory();
         Scanner scan = new Scanner(System.in);
+
+        battleHistory.load();
 
         if (Files.exists(pokemonPath) && Files.exists(attackPath)) {
             loadFromFile(pokedex, pokemonPath, attackPath);
@@ -29,11 +31,12 @@ public class Poedex {
             System.out.println("2. Add Pokemon");
             System.out.println("3. Edit Pokemon");
             System.out.println("4. Delete Pokemon");
-            System.out.println("5.Save to file");
-            System.out.println("6.Load from File");
-            System.out.println("7.Reset to Seed data");
+            System.out.println("5. Save to file");
+            System.out.println("6. Load from File");
+            System.out.println("7. Reset to Seed data");
             System.out.println("8. Start Battle");
-            System.out.println("9.Quit");
+            System.out.println("9. View Battle History");
+            System.out.println("10. Quit");
 
 
             int choice = readInt(scan, "Choose one: ");
@@ -68,9 +71,19 @@ public class Poedex {
                         }
                         Battle battle = new Battle(playerPokemon.createBattleCopy(), enemyPokemon.createBattleCopy());
                         battle.startBattle();
+                        if (battle.isBattleOver()) {
+                            String result = playerPokemon.getName() + " VS "
+                                    + enemyPokemon.getName() + " - Winner: "
+                                    + battle.getWinnerName();
+
+                            battleHistory.addResult(result);
+                        }
                 }
                 }
                 case 9 -> {
+                    battleHistory.showHistory();
+                }
+                case 19 -> {
                     System.out.println("Closing...");
                     saveToFile(pokedex, pokemonPath, attackPath);
                     running = false;

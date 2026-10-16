@@ -64,9 +64,9 @@ public class Attack {
     @Override
     public String toString() {
         return "Attack name: " + name +
-                "Type: " + type +
-                "Damage: " + baseDamage +
-                "Accuracy: " + accuracy +
+                " Type: " + type +
+                " Damage: " + baseDamage +
+                " Accuracy: " + accuracy +
                 "\n";
     }
 

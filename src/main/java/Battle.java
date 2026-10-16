@@ -142,6 +142,17 @@ public class Battle {
             playTurn(choice);
         }
     }
+    public String getWinnerName() {
+        if (enemyPokemon.isFainted()) {
+            return playerPokemon.getName();
+        }
+
+        if (playerPokemon.isFainted()) {
+            return enemyPokemon.getName();
+        }
+
+        return "No winner yet";
+    }
 
 
 
