@@ -59,8 +59,14 @@ public class Battle {
             System.out.println("Attack missed!");
             return true;
         }
+        double multiplier = TypeEffectiveness.getMultiplier(selectedAttack.getType(), enemyPokemon.getType());
+        int damage = (int) (selectedAttack.getBaseDamage() * multiplier);
+        if (multiplier > 1.0) {
+            System.out.println("The attack is super effective");
+        } else if (multiplier < 1.0) {
+            System.out.println("The attack is not very effective");
+        }
 
-        int damage = selectedAttack.getBaseDamage();
         enemyPokemon.takeDamage(damage);
         System.out.println(enemyPokemon.getName() + " has " + enemyPokemon.getCurrentHp() + " HP left");
         return true;
@@ -84,8 +90,14 @@ public class Battle {
             System.out.println("Attack missed!");
             return;
         }
+        double multiplier = TypeEffectiveness.getMultiplier(selectedAttack.getType(), playerPokemon.getType());
 
-        int damage = selectedAttack.getBaseDamage();
+        int damage = (int) (selectedAttack.getBaseDamage() * multiplier);
+        if (multiplier > 1.0) {
+            System.out.println("The attack is super effective");
+        } else if (multiplier < 1.0) {
+            System.out.println("The attack is not very effective");
+        }
         playerPokemon.takeDamage(damage);
         System.out.println(playerPokemon.getName() + " has " + playerPokemon.getCurrentHp() + " HP left");
     }
@@ -126,7 +138,7 @@ public class Battle {
             showWinner();
         }
     }
-    public void startBattle() {
+    public void startBattle(Scanner scan) {
         if(playerPokemon.getAttacks().isEmpty()) {
             System.out.println(playerPokemon.getName() + " has no attacks ");
             return;
@@ -137,7 +149,6 @@ public class Battle {
             return;
         }
 
-        Scanner scanner = new Scanner(System.in);
         showMatchup();
         while (!isBattleOver()) {
             System.out.println();
@@ -146,14 +157,8 @@ public class Battle {
             System.out.println(enemyPokemon.getName() + ": " + enemyPokemon.getCurrentHp() + "/" + enemyPokemon.getMaxHp() + " HP");
             System.out.println("----------------------");
             showPlayerAttacks();
-            System.out.print("Choose attack: ");
-            if (!scanner.hasNextInt()) {
-                System.out.println("Enter a number!");
-                scanner.next();
-                continue;
-            }
 
-            int choice = scanner.nextInt();
+           int choice = InputHelper.readInBetween(scan, "Choose attack: ", 1, playerPokemon.getAttacks().size());
             playTurn(choice);
         }
     }

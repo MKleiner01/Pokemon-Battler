@@ -39,7 +39,7 @@ public class Poedex {
             System.out.println("10. Quit");
 
 
-            int choice = readInt(scan, "Choose one: ");
+            int choice = InputHelper.readInt(scan, "Choose one: ");
 
             switch (choice) {
 
@@ -69,8 +69,10 @@ public class Poedex {
                             randomChoice = random.nextInt(pokedex.size());
                             enemyPokemon = pokedex.get(randomChoice);
                         }
+
                         Battle battle = new Battle(playerPokemon.createBattleCopy(), enemyPokemon.createBattleCopy());
-                        battle.startBattle();
+                        battle.startBattle(scan);
+
                         if (battle.isBattleOver()) {
                             String result = playerPokemon.getName() + " VS "
                                     + enemyPokemon.getName() + " - Winner: "
@@ -108,33 +110,20 @@ public class Poedex {
 
     }
 
-    public static int readInt(Scanner scan, String prompt) {
-
-        while (true) {
-            System.out.print(prompt);
-            String input = scan.nextLine();
-
-            try {
-                return Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                System.out.println("That is not a valid number");
-            }
-        }
-    }
 
     public static void addPokemon(Scanner scan, ArrayList<Pokemon> pokedex) {
-        String name = readString(scan, "Enter the POKEMON NAME");
+        String name = InputHelper.readString(scan, "Enter the POKEMON NAME");
 
-        Type pokemonType = readType(scan, "Enter pokemon TYPE");
+        Type pokemonType = InputHelper.readType(scan, "Enter pokemon TYPE");
 
-        int hp = readInBetween(scan, "Enter POKEMONS HP, 1 - 999", 1, 999);
-        int speed = readInBetween(scan, "Enter POKEMONS SPEED, 1 - 255", 1, 255);
+        int hp = InputHelper.readInBetween(scan, "Enter POKEMONS HP, 1 - 999", 1, 999);
+        int speed = InputHelper.readInBetween(scan, "Enter POKEMONS SPEED, 1 - 255", 1, 255);
         Pokemon newPokemon = new Pokemon(name, pokemonType, hp, speed);
         System.out.println("Your Pokemon needs atleast 1 ATTACK");
-        String attackName = readString(scan, "Enter the Attack name ");
-        int baseDamage = readInBetween(scan, "Enter ATTACK damage, 1 - 500", 1, 500);
-        int accuracy = readInBetween(scan, "Enter ATTACK Accuracy, 1 - 100", 1, 100);
-        Type attackType = readType(scan, "Enter ATTACK Type");
+        String attackName = InputHelper.readString(scan, "Enter the Attack name ");
+        int baseDamage = InputHelper.readInBetween(scan, "Enter ATTACK damage, 1 - 500", 1, 500);
+        int accuracy = InputHelper.readInBetween(scan, "Enter ATTACK Accuracy, 1 - 100", 1, 100);
+        Type attackType = InputHelper.readType(scan, "Enter ATTACK Type");
 
 
         Attack newAttack = new Attack(attackName, baseDamage, accuracy, attackType);
@@ -143,53 +132,19 @@ public class Poedex {
 
     }
 
-    public static String readString(Scanner scan, String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            String input = scan.nextLine();
-            if (!input.isBlank() && !input.contains(",") && input.length() <= 20) {
-                return input;
-            } else {
-                System.out.println("Not a valid input");
-            }
-        }
-    }
 
-    public static int readInBetween(Scanner scan, String prompt, int min, int max) {
-        while (true) {
-            int number = readInt(scan, prompt);
-            if (number >= min && number <= max) {
-                return number;
-            } else {
-                System.out.println("Number must be between: " + min + " and " + max);
-            }
 
-        }
 
-    }
 
     public static Pokemon selectPokemon(Scanner scan, ArrayList<Pokemon> pokedex) {
 
         for (int i = 0; i < pokedex.size(); i++) {
             System.out.println((i + 1) + ". " + pokedex.get(i).getName());
         }
-        int choice = readInBetween(scan, "Select one pokemon", 1, pokedex.size());
+        int choice = InputHelper.readInBetween(scan, "Select one pokemon", 1, pokedex.size());
         return pokedex.get(choice - 1);
     }
 
-    public static Type readType(Scanner scan, String prompt) {
-        while (true) {
-            try {
-                System.out.print(prompt);
-                String type = scan.nextLine();
-
-                return Type.valueOf(type.toUpperCase());
-
-            } catch (IllegalArgumentException e) {
-                System.out.println("That is not a valid Type");
-            }
-        }
-    }
 
     public static void editPokemon(Scanner scan, ArrayList<Pokemon> pokedex) {
 
@@ -205,30 +160,30 @@ public class Poedex {
             System.out.println("5. Remove attack");
             System.out.println("6. Speed");
 
-            int choice = readInBetween(scan, "Choose", 1, 6);
+            int choice = InputHelper.readInBetween(scan, "Choose", 1, 6);
 
             switch (choice) {
 
                 case 1 -> {
-                    String name = readString(scan, "What name do you want");
+                    String name = InputHelper.readString(scan, "What name do you want");
                     pokemonToEdit.setName(name);
                 }
                 case 2 -> {
-                    Type type = readType(scan, "What TYPE do you want");
+                    Type type = InputHelper.readType(scan, "What TYPE do you want");
                     pokemonToEdit.setType(type);
                 }
                 case 3 -> {
-                    int hp = readInBetween(scan, "What HP do you want, 1 - 999", 1, 999);
+                    int hp = InputHelper.readInBetween(scan, "What HP do you want, 1 - 999", 1, 999);
                     pokemonToEdit.setMaxHp(hp);
                     pokemonToEdit.setCurrentHp(hp);
 
                 }
                 case 4 -> {
                     if (pokemonToEdit.getAttacks().size() < 4) {
-                        String name = readString(scan, "Whats the Attack name");
-                        int damage = readInBetween(scan, "Enter ATTACK damage, 1 - 500", 1, 500);
-                        int accuracy = readInBetween(scan, "Enter ATTACK Accuracy, 1 - 100", 1, 100);
-                        Type type = readType(scan, "Whats the Attack Type");
+                        String name = InputHelper.readString(scan, "Whats the Attack name");
+                        int damage = InputHelper.readInBetween(scan, "Enter ATTACK damage, 1 - 500", 1, 500);
+                        int accuracy = InputHelper.readInBetween(scan, "Enter ATTACK Accuracy, 1 - 100", 1, 100);
+                        Type type = InputHelper.readType(scan, "Whats the Attack Type");
                         Attack attack = new Attack(name, damage, accuracy, type);
                         pokemonToEdit.getAttacks().add(attack);
                     } else {
@@ -243,14 +198,14 @@ public class Poedex {
                             System.out.println((i + 1) + ". " + pokemonToEdit.getAttacks().get(i).getName());
 
                         }
-                        int attackChoice = readInBetween(scan, "Choose attack to remove", 1, pokemonToEdit.getAttacks().size());
+                        int attackChoice = InputHelper.readInBetween(scan, "Choose attack to remove", 1, pokemonToEdit.getAttacks().size());
                         pokemonToEdit.getAttacks().remove(attackChoice - 1);
                     } else {
                         System.out.println("A Pokemon must have at least 1 attack");
                     }
                 }
                 case 6 -> {
-                    int speed = readInBetween(scan, "Enter new SPEED, 1 - 255", 1, 255);
+                    int speed = InputHelper.readInBetween(scan, "Enter new SPEED, 1 - 255", 1, 255);
                     pokemonToEdit.setSpeed(speed);
                 }
 
